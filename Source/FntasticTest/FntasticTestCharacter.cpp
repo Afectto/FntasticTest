@@ -9,9 +9,9 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
-//#include "Enemy.h"
+#include "Enemy.h"
 #include "EngineUtils.h"
-//#include "MyBullet.h"
+#include "MyBullet.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AFntasticTestCharacter
@@ -151,15 +151,15 @@ bool AFntasticTestCharacter::isSprint()
 
 void AFntasticTestCharacter::StartAI()
 {
-	//TArray<AEnemy*> Enemys;
-	//FindAllActors(Enemys);
+	TArray<AEnemy*> Enemys;
+	FindAllActors(Enemys);
 
-	//for (int i = 0; i < Enemys.Num(); i++)
-	//{
-	//	AEnemy* currEnemy = Enemys[i];
-	//	isAIEnabled ? currEnemy->StopAI() : currEnemy->StartAI();
-	//	isAIEnabled = !isAIEnabled;
-	//}
+	for (int i = 0; i < Enemys.Num(); i++)
+	{
+		AEnemy* currEnemy = Enemys[i];
+		isAIEnabled ? currEnemy->StopAI() : currEnemy->StartAI();
+		isAIEnabled = !isAIEnabled;
+	}
 }
 
 template<typename T>

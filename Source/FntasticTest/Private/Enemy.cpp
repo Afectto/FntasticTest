@@ -9,7 +9,7 @@
 #include "Navigation/PathFollowingComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "EngineUtils.h"
-//#include "MyBullet.h"
+#include "MyBullet.h"
 
 // Sets default values
 AEnemy::AEnemy()
@@ -267,22 +267,22 @@ void AEnemy::OnDetectedHitEnemyOverlapBegin(UPrimitiveComponent* OverlappedComp,
 	AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
 	bool bFromSweep, const FHitResult& SweepResult)
 {
-	//if (!isAiEnabled) return;
-	//AMyBullet* Bullet = Cast<AMyBullet>(OtherActor);
+	if (!isAiEnabled) return;
+	AMyBullet* Bullet = Cast<AMyBullet>(OtherActor);
 
-	//if (Bullet)
-	//{
-	//	HitPoints--;
+	if (Bullet)
+	{
+		HitPoints--;
 
-	//	if (HitPoints <= 0)
-	//	{
-	//		GEngine->AddOnScreenDebugMessage(708000, 4, FColor::Purple, "Enemy Died");
-	//		StopAI();
-	//	}
+		if (HitPoints <= 0)
+		{
+			GEngine->AddOnScreenDebugMessage(708000, 4, FColor::Purple, "Enemy Died");
+			StopAI();
+		}
 
-	//	SeekPlayer();
-	//	Bullet->onHitBullet();
+		SeekPlayer();
+		Bullet->onHitBullet();
 
-	//	GEngine->AddOnScreenDebugMessage(7088, 4, FColor::Red, "You Hit Enemy");
-	//}
+		GEngine->AddOnScreenDebugMessage(7088, 4, FColor::Red, "You Hit Enemy");
+	}
 }
