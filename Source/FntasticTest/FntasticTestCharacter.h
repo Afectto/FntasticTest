@@ -57,10 +57,28 @@ protected:
 	// To add mapping context
 	virtual void BeginPlay();
 
+	void SprintStart();
+	void SprintEnd();
+	void StartAI();
+
+	void Shoot();
+
+	float RunSpeed = 500.0f;
+	float SprintSpeed = 1000.0f;
+	bool isAIEnabled = false;
+
+public:
+	bool isSprint();
 public:
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+	template<typename T>
+	void FindAllActors(TArray<T*>& Out);
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AActor> MyBullet;
 };
 

@@ -9,7 +9,9 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
-
+//#include "Enemy.h"
+#include "EngineUtils.h"
+//#include "MyBullet.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AFntasticTestCharacter
@@ -84,6 +86,12 @@ void AFntasticTestCharacter::SetupPlayerInputComponent(class UInputComponent* Pl
 		//Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AFntasticTestCharacter::Look);
 
+		PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &AFntasticTestCharacter::SprintStart);
+		PlayerInputComponent->BindAction("Sprint", IE_Released, this, &AFntasticTestCharacter::SprintEnd);
+
+		PlayerInputComponent->BindAction("StartAI", IE_Pressed, this, &AFntasticTestCharacter::StartAI);
+
+		PlayerInputComponent->BindAction("Shoot", IE_Pressed, this, &AFntasticTestCharacter::Shoot);
 	}
 
 }
@@ -124,6 +132,51 @@ void AFntasticTestCharacter::Look(const FInputActionValue& Value)
 	}
 }
 
+void AFntasticTestCharacter::SprintStart()
+{
+	GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
+}
+
+void AFntasticTestCharacter::SprintEnd()
+{
+	GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
+}
+
+
+bool AFntasticTestCharacter::isSprint()
+{
+	return GetCharacterMovement()->MaxWalkSpeed == SprintSpeed;
+}
+
+
+void AFntasticTestCharacter::StartAI()
+{
+	//TArray<AEnemy*> Enemys;
+	//FindAllActors(Enemys);
+
+	//for (int i = 0; i < Enemys.Num(); i++)
+	//{
+	//	AEnemy* currEnemy = Enemys[i];
+	//	isAIEnabled ? currEnemy->StopAI() : currEnemy->StartAI();
+	//	isAIEnabled = !isAIEnabled;
+	//}
+}
+
+template<typename T>
+void AFntasticTestCharacter::FindAllActors(TArray<T*>& Out)
+{
+	UWorld* World = GetWorld();
+	for (TActorIterator<T> It(World); It; ++It)
+	{
+		Out.Add(*It);
+	}
+}
+
+void AFntasticTestCharacter::Shoot()
+{
+	GEngine->AddOnScreenDebugMessage(700, 1, FColor::Green, "SHOOT");
+	GetWorld()->SpawnActor<AActor>(MyBullet, GetPawnViewLocation(), GetActorRotation());
+}
 
 
 
