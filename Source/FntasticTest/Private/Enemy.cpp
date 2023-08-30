@@ -25,9 +25,6 @@ AEnemy::AEnemy()
 	PlayerAttackCollisionDetection = CreateDefaultSubobject<USphereComponent>(TEXT("Player Attack Collision Detection"));
 	PlayerAttackCollisionDetection->SetupAttachment(RootComponent);
 
-	DamageCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("Damage Collision"));
-	DamageCollision->SetupAttachment(GetMesh(), TEXT("RightHandSocket"));
-
 	CollisionDetectionSeePlayer = CreateDefaultSubobject<USphereComponent>(TEXT("Collision Detection See Player"));
 	CollisionDetectionSeePlayer->SetupAttachment(RootComponent);
 
@@ -77,14 +74,12 @@ void AEnemy::BeginPlay()
 void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 // Called to bind functionality to input
 void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
 }
 
 void AEnemy::OnAIMoveCompleted(FAIRequestID RequestID, const FPathFollowingResult& Result)
@@ -156,11 +151,10 @@ void AEnemy::OnPlayerDetectedOverlapBegin(UPrimitiveComponent* OverlappedComp,
 	AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
 	bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (!isAiEnabled) return;
+	if (!isAiEnabled || OtherActor != PlayerREF) return;
 
 	if (PlayerREF)
 	{
-
 		PlayerDetected = true;
 		SeekHearPlayer();
 	}
@@ -169,7 +163,7 @@ void AEnemy::OnPlayerDetectedOverlapBegin(UPrimitiveComponent* OverlappedComp,
 void AEnemy::OnPlayerDetectedOverlapEnd(UPrimitiveComponent* OverlappedComp,
 	AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	if (!isAiEnabled) return;
+	if (!isAiEnabled || OtherActor != PlayerREF) return;
 
 	if (PlayerREF)
 	{
@@ -182,7 +176,7 @@ void AEnemy::OnPlayerAttackOverlapBegin(UPrimitiveComponent* OverlappedComp,
 	AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
 	bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (!isAiEnabled) return;
+	if (!isAiEnabled || OtherActor != PlayerREF) return;
 
 	if (PlayerREF && isAiEnabled)
 	{
@@ -193,7 +187,7 @@ void AEnemy::OnPlayerAttackOverlapBegin(UPrimitiveComponent* OverlappedComp,
 void AEnemy::OnPlayerAttackOverlapEnd(UPrimitiveComponent* OverlappedComp,
 	AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	if (!isAiEnabled) return;
+	if (!isAiEnabled || OtherActor != PlayerREF) return;
 
 	if (PlayerREF && isAiEnabled)
 	{
@@ -208,8 +202,8 @@ void AEnemy::OnDetectedSeePlayerOverlapBegin(UPrimitiveComponent* OverlappedComp
 	AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
 	bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (!isAiEnabled) return;
-
+	if (!isAiEnabled || OtherActor != PlayerREF) return;
+	
 	if (PlayerREF)
 	{
 		GEngine->AddOnScreenDebugMessage(50, 4, FColor::Red, "Enemy see you");
@@ -222,7 +216,7 @@ void AEnemy::OnDetectedSeePlayerOverlapEnd(class UPrimitiveComponent* Overlapped
 	class AActor* OtherActor, class UPrimitiveComponent* OtherComp,
 	int32 OtherBodyIndex)
 {
-	if (!isAiEnabled) return;
+	if (!isAiEnabled || OtherActor != PlayerREF) return;
 
 	if (PlayerREF)
 	{
@@ -238,9 +232,8 @@ void AEnemy::StartAI()
 
 	FHitResult empty;
 	if (PlayerCollisionDetection->IsOverlappingActor(PlayerREF)) OnPlayerDetectedOverlapBegin(NULL, PlayerREF, NULL, NULL, NULL, empty);
-	if (PlayerAttackCollisionDetection->IsOverlappingActor(PlayerREF)) OnPlayerAttackOverlapBegin(NULL, PlayerREF, NULL, NULL, NULL, empty);
 	if (CollisionDetectionSeePlayer->IsOverlappingActor(PlayerREF)) OnDetectedSeePlayerOverlapBegin(NULL, PlayerREF, NULL, NULL, NULL, empty);
-
+	if (PlayerAttackCollisionDetection->IsOverlappingActor(PlayerREF)) OnPlayerAttackOverlapBegin(NULL, PlayerREF, NULL, NULL, NULL, empty);
 
 	HitPoints = 10;
 }

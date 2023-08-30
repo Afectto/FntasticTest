@@ -158,14 +158,15 @@ void AFntasticTestCharacter::StartAI()
 	{
 		AEnemy* currEnemy = Enemys[i];
 		isAIEnabled ? currEnemy->StopAI() : currEnemy->StartAI();
-		isAIEnabled = !isAIEnabled;
 	}
+	isAIEnabled = !isAIEnabled;
 }
 
 template<typename T>
 void AFntasticTestCharacter::FindAllActors(TArray<T*>& Out)
 {
 	UWorld* World = GetWorld();
+
 	for (TActorIterator<T> It(World); It; ++It)
 	{
 		Out.Add(*It);

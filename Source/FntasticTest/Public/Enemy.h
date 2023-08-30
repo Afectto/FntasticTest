@@ -51,9 +51,6 @@ public:
 	class USphereComponent* PlayerAttackCollisionDetection;
 
 	UPROPERTY(EditAnywhere)
-	class UBoxComponent* DamageCollision;
-
-	UPROPERTY(EditAnywhere)
 	class USphereComponent* CollisionDetectionSeePlayer;
 
 	class AEnemyAIController* EnemyAIController;
